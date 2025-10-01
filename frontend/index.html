@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control de Minecraft</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* CSS Unificado: Login "Polygons" + Dashboard Original Completo */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #1a1a2e; overflow-x: hidden; }
+        .hidden { display: none !important; }
+
+        /* --- Estilos del Login --- */
+        #particles-js { position: fixed; width: 100%; height: 100%; z-index: 1; }
+        #auth-container { display: flex; justify-content: center; align-items: center; width: 100%; height: 100vh; }
+        #auth-container .container { width: 100%; max-width: 380px; padding: 20px; position: relative; z-index: 10; }
+        #auth-container .form-box { background: rgba(0, 0, 0, 0.7); border-radius: 24px; padding: 40px; border: 1px solid rgba(0, 212, 255, 0.3); }
+        #auth-container h2 { color: #00d4ff; text-align: center; margin-bottom: 20px; font-family: 'Cinzel', serif; letter-spacing: 3px; font-size: 24px; }
+        #auth-container .input-group { position: relative; margin-bottom: 30px; }
+        #auth-container .input-field { width: 100%; padding: 12px 0; font-size: 15px; color: #00d4ff; background: transparent; border: none; border-bottom: 1px solid rgba(0, 212, 255, 0.3); outline: none; }
+        #auth-container .input-group label { position: absolute; top: 12px; left: 0; color: rgba(0, 212, 255, 0.7); pointer-events: none; transition: 0.4s; }
+        #auth-container .input-field:focus ~ label, #auth-container .input-field:valid ~ label { top: -12px; font-size: 12px; color: #00d4ff; }
+        #auth-container .login-btn { width: 100%; padding: 12px 0; background: #000; border: 1px solid #00d4ff; border-radius: 25px; color: #00d4ff; font-size: 15px; cursor: pointer; }
+        #auth-container .toggle-link { text-align: center; margin-top: 20px; color: rgba(0, 212, 255, 0.7); font-size: 14px; }
+        #auth-container .toggle-link a { color: #00d4ff; text-decoration: none; cursor: pointer; }
+
+        /* --- Estilos del Dashboard Original --- */
+        .dashboard-body { background-color: #000; color: #E5E7EB; width: 100%; min-height: 100vh; position: relative; padding: 1rem; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .bg-animation i { position: absolute; background: #444; border-radius: 50%; animation: pA linear infinite; }
+        @keyframes pA { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
+        .logo-container { position: absolute; top: 2rem; left: 2rem; perspective: 900px; z-index: 100; font-family: 'Press Start 2P', cursive; }
+        .logo-main { position: relative; font-size: 2.5rem; color: #fff; text-shadow: 4px 4px 0px #2E7D32; animation: r3D 10s infinite linear, pG 2s infinite ease-in-out; transform-style: preserve-3d; }
+        .logo-subtitle { font-size: 0.8rem; color: #8BC34A; text-shadow: 0 0 5px #4CAF50; animation: sF 3s infinite alternate; }
+        @keyframes r3D { 0% { transform: rotateY(20deg); } 50% { transform: rotateY(-20deg); } 100% { transform: rotateY(20deg); } }
+        @keyframes pG { 0%, 100% { filter: drop-shadow(0 0 5px #4CAF50); } 50% { filter: drop-shadow(0 0 15px #8BC34A); } }
+        @keyframes sF { from { opacity: 0.7; } to { opacity: 1; } }
+        .content-panel { background-color:rgba(31, 41, 55, 0.8); backdrop-filter: blur(10px); border-radius:8px; padding:16px; border:1px solid #374151; }
+        .power-button-container { display: flex; justify-content: center; align-items: center; }
+        .power-button { --bg: #2B3044; --text: #E8E8E8; --icon-on: #5E81AC; --icon-off: #686E85; position: relative; cursor: pointer; }
+        .power-button .icon, .power-button .icon:before, .power-button .icon:after { content: ''; display: block; position: absolute; border-radius: 50%; }
+        .power-button .icon { width: 24px; height: 24px; left: 18px; top: 18px; transform: rotate(45deg); }
+        .power-button .icon:before { width: 2px; height: 14px; left: 11px; top: 5px; background: var(--icon, var(--icon-off)); }
+        .power-button .icon:after { width: 14px; height: 14px; left: 5px; top: 5px; border: 2px solid var(--icon, var(--icon-off)); }
+        .power-button svg { width: 60px; height: 60px; display: block; transform: rotate(-90deg); }
+        .power-button svg path { fill: none; stroke: var(--bg); stroke-width: 10; stroke-linecap: round; }
+        .power-button svg path.line { stroke: var(--text); stroke-dasharray: 1 38; stroke-dashoffset: var(--o, -39); transition: stroke-dashoffset 0.4s; }
+        .power-button input { display: none; }
+        .power-button input:checked + svg path.line { --o: 0; }
+        .power-button input:checked + svg + .icon { --icon: var(--icon-on); }
+        .navigation-container { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; }
+        .navigation { display: flex; background: #212121; border-radius: 15px; padding: 0 20px; }
+        .navigation a { position: relative; color: #aaa; padding: 0 20px; font-size: 1.2em; display: flex; align-items: center; justify-content: center; height: 70px; cursor: pointer; text-decoration: none; }
+        .navigation a .icon { display: block; font-size: 1.5em; transition: 0.5s; }
+        .navigation a .title { position: absolute; opacity: 0; transition: 0.5s; transform: translateY(15px); }
+        .navigation a.active .icon { transform: translateY(-10px); color: #61d761; }
+        .navigation a.active .title { opacity: 1; transform: translateY(20px); font-size: 0.7em; color: #fff; }
+        .console-textarea, .file-editor { width:100%; height:400px; background-color:#1E293B; border:1px solid #334155; color:#E2E8F0; font-family: monospace; font-size:14px; resize:none; border-radius:4px; }
+        .player-card { background:rgba(31, 41, 55, 0.8); border:1px solid #374151; border-radius:1rem; padding:1rem; text-align:center; }
+        .player-avatar { width:80px; height:80px; border-radius:50%; margin:0 auto .5rem; border:3px solid #4f46e5; }
+        .file-tree { height: 400px; overflow-y: auto; background-color: #1E293B; border-radius: 4px; padding: 8px; }
+        .file-tree-item { cursor: pointer; padding: 4px; border-radius: 2px; display: flex; align-items: center; gap: 8px; }
+        .file-tree-item:hover { background-color: #334155; }
+    </style>
+</head>
+<body id="page-body">
+
+    <div id="particles-js"></div>
+
+    <div id="auth-container">
+        <div class="container">
+            <div id="login-box" class="form-box">
+                <h2>Login</h2>
+                <form id="login-form">
+                    <div class="input-group"><input type="text" name="username" required class="input-field"><label>Username</label></div>
+                    <div class="input-group"><input type="password" name="password" required class="input-field"><label>Password</label></div>
+                    <button type="submit" class="login-btn">SIGN IN</button>
+                    <div class="toggle-link">Don't have an account? <a id="show-register">Register</a></div>
+                </form>
+            </div>
+            <div id="register-box" class="form-box hidden">
+                <h2>Register</h2>
+                <form id="register-form">
+                    <div class="input-group"><input type="text" name="username" required class="input-field"><label>Username</label></div>
+                    <div class="input-group"><input type="password" name="password" required class="input-field"><label>Password</label></div>
+                    <button type="submit" class="login-btn">REGISTER</button>
+                    <div class="toggle-link">Already have an account? <a id="show-login">Sign In</a></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-dashboard" class="dashboard-body hidden"></div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            particlesJS('particles-js', { particles: { number: { value: 80 }, color: { value: "#00d4ff" }, shape: { type: "circle" }, opacity: { value: 0.5 }, size: { value: 3 }, line_linked: { enable: true, distance: 150, color: "#00d4ff", opacity: 0.4 }, move: { enable: true, speed: 4, direction: "none", out_mode: "out" } }, interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "repulse" } } } });
+
+            const API_URL = window.location.origin;
+            const authContainer = document.getElementById('auth-container');
+            const dashboard = document.getElementById('main-dashboard');
+            
+            document.getElementById('show-register').addEventListener('click', () => { document.getElementById('login-box').classList.add('hidden'); document.getElementById('register-box').classList.remove('hidden'); });
+            document.getElementById('show-login').addEventListener('click', () => { document.getElementById('register-box').classList.add('hidden'); document.getElementById('login-box').classList.remove('hidden'); });
+
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('register-form').addEventListener('submit', handleRegister);
+
+            let socket = null, statusCheckInterval = null, playerListInterval = null, currentEditingFile = null;
+
+            async function handleLogin(e) {
+                e.preventDefault();
+                const form = e.target;
+                const data = Object.fromEntries(new FormData(form).entries());
+                try {
+                    const response = await fetch(`${API_URL}/api/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    if (response.ok) {
+                        authContainer.classList.add('hidden');
+                        document.getElementById('particles-js').classList.add('hidden');
+                        dashboard.classList.remove('hidden');
+                        document.body.style.display = 'block';
+                        populateDashboard(dashboard);
+                    } else { alert('Credenciales inválidas.'); }
+                } catch (error) { alert('Error de conexión.'); }
+            }
+
+            async function handleRegister(e) {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(e.target).entries());
+                try {
+                    const response = await fetch(`${API_URL}/api/auth/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+                    const result = await response.json();
+                    alert(result.message);
+                    if (response.ok) {
+                        document.getElementById('show-login').click();
+                        document.getElementById('login-form').reset();
+                    }
+                } catch (error) { alert('Error de conexión.'); }
+            }
+
+            function populateDashboard(element) {
+                element.innerHTML = `
+                    <div class="bg-animation"></div>
+                    <div class="logo-container">
+                        <div class="logo-main">Professional</div>
+                        <div class="logo-subtitle">Servers</div>
+                    </div>
+                    <main class="w-full max-w-7xl flex items-center justify-center z-10 mx-auto" style="min-height: calc(100vh - 150px);">
+                        <div id="home-panel" class="content-panel text-center w-full max-w-lg"></div>
+                        <div id="console-panel" class="content-panel w-full max-w-3xl hidden"></div>
+                                 <div id="players-panel" class="content-panel w-full max-w-5xl hidden"></div>
+                        <div id="files-panel" class="content-panel w-full max-w-5xl hidden"></div>
+                        <div id="mods-panel" class="content-panel w-full max-w-3xl hidden"></div>
+                        <div id="settings-panel" class="content-panel w-full max-w-3xl hidden"></div>
+                    </main>
+                    <div class="navigation-container">
+                        <nav class="navigation">
+                            <a data-panel="home-panel" class="link active"><span class="icon"><i data-feather="home"></i></span><span class="title">Inicio</span></a>
+                            <a data-panel="console-panel" class="link"><span class="icon"><i data-feather="terminal"></i></span><span class="title">Consola</span></a>
+                            <a data-panel="players-panel" class="link"><span class="icon"><i data-feather="users"></i></span><span class="title">Jugadores</span></a>
+                            <a data-panel="files-panel" class="link"><span class="icon"><i data-feather="folder"></i></span><span class="title">Archivos</span></a>
+                            <a data-panel="mods-panel" class="link"><span class="icon"><i data-feather="box"></i></span><span class="title">Mods</span></a>
+                            <a data-panel="settings-panel" class="link"><span class="icon"><i data-feather="settings"></i></span><span class="title">Ajustes</span></a>
+                            <a id="logout-button" class="link"><span class="icon"><i data-feather="log-out"></i></span><span class="title">Salir</span></a>
+                        </nav>
+                    </div>`;
+                feather.replace();
+                
+                const bgAnimation = element.querySelector('.bg-animation');
+                for (let i = 0; i < 200; i++) { const p = document.createElement('i'); p.style.width = `${Math.random()*2+1}px`; p.style.height = p.style.width; p.style.left = `${Math.floor(Math.random()*100)}vw`; p.style.animationDuration = `${Math.random()*5+5}s`; p.style.animationDelay = `${Math.random()*-10}s`; bgAnimation.appendChild(p); }
+
+                document.getElementById('logout-button').addEventListener('click', () => window.location.reload());
+                
+                element.querySelectorAll('.navigation a.link[data-panel]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        element.querySelectorAll('.navigation a.link').forEach(item => item.classList.remove('active'));
+                        link.classList.add('active');
+                        showPanel(link.getAttribute('data-panel'));
+                    });
+                });
+                showPanel('home-panel');
+            }
+            
+            function showPanel(panelId) {
+                document.querySelectorAll('#main-dashboard .content-panel').forEach(p => { p.classList.add('hidden'); p.innerHTML = ''; });
+                if (statusCheckInterval) clearInterval(statusCheckInterval);
+                if (playerListInterval) clearInterval(playerListInterval);
+                if (socket) { socket.disconnect(); socket = null; }
+                
+                const panel = document.getElementById(panelId);
+                if (!panel) return;
+
+                panel.classList.remove('hidden');
+                
+                if (panelId === 'home-panel') {
+                    panel.innerHTML = `<h1 class="text-3xl font-bold mb-4">Minecraft Server</h1><p class="text-gray-400 mb-6">Estado del servidor y control de encendido.</p><div class="power-button-container"><label class="power-button"><input type="checkbox" id="power-checkbox"><svg viewBox="0 0 60 60"><path class="line" d="M29.5,6.5a23,23,0,1,1-17,9.4" /></svg><div class="icon"></div></label></div>`;
+                    document.getElementById('power-checkbox').addEventListener('change', togglePower);
+                    checkServerStatus();
+                    statusCheckInterval = setInterval(checkServerStatus, 5000);
+                }
+                
+                if (panelId === 'console-panel') {
+                    panel.innerHTML = `<div class="console-container"><textarea id="console-output" readonly class="console-textarea"></textarea><form id="console-command-form" class="mt-2 flex gap-2"><input type="text" id="console-command-input" class="flex-grow bg-gray-900 border-gray-700 rounded px-2 py-1" placeholder="Comando..."><button type="submit" class="bg-indigo-600 px-4 py-1 rounded">Enviar</button></form></div>`;
+                    document.getElementById('console-command-form').addEventListener('submit', sendConsoleCommand);
+                    connectConsole();
+                }
+
+                if (panelId === 'players-panel') {
+                     panel.innerHTML = `<h2 class="text-2xl font-bold text-center mb-4">Jugadores Conectados</h2><div id="player-list" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>`;
+                     fetchPlayers();
+                     playerListInterval = setInterval(fetchPlayers, 10000);
+                }
+                
+                if (panelId === 'files-panel') {
+                    panel.innerHTML = `<h2 class="text-2xl font-bold mb-4">Archivos del Servidor</h2><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="md:col-span-1 file-tree" id="file-tree"></div><div class="md:col-span-2"><textarea id="file-editor" class="file-editor"></textarea><button id="save-file-btn" class="mt-2 bg-blue-600 px-4 py-2 rounded">Guardar</button></div></div>`;
+                    document.getElementById('save-file-btn').addEventListener('click', saveFile);
+                    window.loadFiles('/');
+                }
+
+                if (panelId === 'mods-panel') {
+                    panel.innerHTML = `<h2 class="text-2xl font-bold mb-4">Gestión de Mods</h2><form id="upload-mods-form" class="mb-4"><input type="file" name="mods" multiple /><button type="submit" class="mt-2 bg-violet-600 px-4 py-2 rounded">Subir</button></form><h3 class="text-xl mt-4 mb-2">Mods Instalados</h3><div id="mods-list"></div>`;
+                    document.getElementById('upload-mods-form').addEventListener('submit', handleUploadMods);
+                    fetchMods();
+                }
+
+                 if (panelId === 'settings-panel') {
+                    panel.innerHTML = `<h2 class="text-2xl font-bold mb-4">Ajustes</h2><form id="version-form"><label class="block mb-2">Versión MC: <input type="text" name="version" class="bg-gray-700 p-1 rounded"></label><label class="block mb-2">Tipo: <input type="text" name="type" class="bg-gray-700 p-1 rounded"></label><label class="block mb-4">Versión Forge/Fabric: <input type="text" name="forge_version" class="bg-gray-700 p-1 rounded"></label><button type="submit" class="bg-red-600 px-4 py-2 rounded">Recrear Servidor</button></form>`;
+                    document.getElementById('version-form').addEventListener('submit', handleRecreate);
+                    fetchCurrentSettings();
+                }
+            }
+            
+            // --- Funciones del Dashboard ---
+            async function checkServerStatus() { try { const res = await fetch(`${API_URL}/api/server/status`); const data = await res.json(); const cb = document.getElementById('power-checkbox'); if (cb) { cb.checked = (data.status === 'on'); cb.disabled = (data.status === 'pending'); } } catch (e) {} }
+            async function togglePower() { const cb = document.getElementById('power-checkbox'); cb.disabled = true; const endpoint = cb.checked ? '/api/server/start' : '/api/server/stop'; try { await fetch(`${API_URL}${endpoint}`, { method: 'POST' }); setTimeout(checkServerStatus, 3000); } catch (e) { checkServerStatus(); } }
+            function connectConsole() { const ta = document.getElementById('console-output'); if(!ta) return; socket = io(window.location.origin); socket.on('connect', () => ta.value = 'Conectado.\n'); socket.on('log', (data) => { ta.value += data.replace(/\u001b\[[0-9;]*m/g, ''); ta.scrollTop = ta.scrollHeight; }); }
+            function sendConsoleCommand(e) { e.preventDefault(); const input = document.getElementById('console-command-input'); if (input && input.value) { fetch(`${API_URL}/api/server/command`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({command: input.value})}); input.value = ''; } }
+            async function fetchPlayers() { const list = document.getElementById('player-list'); if (!list) return; try { const res = await fetch(`${API_URL}/api/server/players`); const data = await res.json(); list.innerHTML = ''; if (data.error) { list.innerHTML = `<p class="col-span-full text-center text-red-500">${data.error}</p>`; return; } if (data.players && data.players.length > 0) { data.players.forEach(p => { list.innerHTML += `<div class="player-card"><img src="${p.avatar}" class="player-avatar"><p>${p.name}</p><div class="mt-2"><button onclick="managePlayer('kick', '${p.name}')" class="bg-yellow-500 px-2 py-1 rounded text-xs">Kick</button> <button onclick="managePlayer('ban', '${p.name}')" class="bg-red-500 px-2 py-1 rounded text-xs">Ban</button></div></div>`; }); } else { list.innerHTML = '<p class="col-span-full text-center">No hay jugadores conectados.</p>'; } } catch(e) { list.innerHTML = '<p class="col-span-full text-center">Error al cargar jugadores.</p>'; } }
+            window.managePlayer = async (action, name) => { if (!confirm(`¿Seguro que quieres '${action}' a ${name}?`)) return; await fetch(`${API_URL}/api/server/${action}`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({player: name})}); fetchPlayers(); };
+            window.loadFiles = async (dir) => { const tree = document.getElementById('file-tree'); if (!tree) return; tree.innerHTML = 'Cargando...'; try { const res = await fetch(`${API_URL}/api/files/list?path=${encodeURIComponent(dir)}`); const files = await res.json(); tree.innerHTML = ''; if (dir !== '/') { const pDir = dir.substring(0, dir.lastIndexOf('/')) || '/'; tree.innerHTML += `<div class="file-tree-item" onclick="window.loadFiles(atob('${btoa(pDir)}'))"><i data-feather="corner-up-left"></i> ... (Volver)</div>`; } files.sort((a,b) => a.isDir ? -1 : 1).forEach(f => { const icon = f.isDir ? 'folder' : 'file'; const action = f.isDir ? `window.loadFiles(atob('${btoa(f.path)}'))` : `window.openFile(atob('${btoa(f.path)}'))`; tree.innerHTML += `<div class="file-tree-item" onclick="${action}"><i data-feather="${icon}"></i> ${f.name}</div>`; }); feather.replace(); } catch(e) { tree.innerHTML = '<p class="text-red-500">Error al cargar archivos.</p>'} };
+            window.openFile = async (path) => { currentEditingFile = path; const editor = document.getElementById('file-editor'); try { const res = await fetch(`${API_URL}/api/files/content?path=${encodeURIComponent(path)}`); const data = await res.json(); editor.value = data.content; } catch(e) { editor.value = "Error al abrir el archivo."} };
+            async function saveFile() { if (!currentEditingFile) return; const editor = document.getElementById('file-editor'); await fetch(`${API_URL}/api/files/save`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ path: currentEditingFile, content: editor.value }) }); alert('Archivo guardado.'); }
+            async function fetchMods() { const list = document.getElementById('mods-list'); if(!list) return; try { const res = await fetch(`${API_URL}/api/mods/list`); const data = await res.json(); list.innerHTML = data.mods.length > 0 ? data.mods.map(m => `<div>- ${m}</div>`).join('') : '<p>No hay mods.</p>'; } catch(e) { list.innerHTML = '<p>Error.</p>'}}
+            async function handleUploadMods(e) { e.preventDefault(); const formData = new FormData(e.target); await fetch(`${API_URL}/api/mods/upload`, { method: 'POST', body: formData }); fetchMods(); alert('Mods subidos. Reinicia el servidor.'); }
+            async function fetchCurrentSettings() { const form = document.getElementById('version-form'); if(!form) return; try { const res = await fetch(`${API_URL}/api/server/settings`); const data = await res.json(); form.elements.version.value = data.VERSION; form.elements.type.value = data.TYPE; form.elements.forge_version.value = data.FORGE_VERSION; } catch(e) {} }
+            async function handleRecreate(e) { e.preventDefault(); if (!confirm('¡ATENCIÓN! Esto borrará tu mundo.')) return; const data = Object.fromEntries(new FormData(e.target).entries()); await fetch(`${API_URL}/api/server/recreate`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)}); alert('Recreando servidor...'); }
+        });
+    </script>
+</body>
+</html>
