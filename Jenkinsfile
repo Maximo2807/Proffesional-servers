@@ -14,8 +14,8 @@ pipeline {
     environment {
         AWS_ACCOUNT_ID = "${params.ACCOUNT_ID}"
         // CLAVES FINALES DEL USUARIO JENKINS-STUDENT
-        AWS_ACCESS_KEY_ID = "AKIA3INCCTU63F4Y337W" 
-        AWS_SECRET_ACCESS_KEY = "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"
+        AWS_ACCESS_KEY_ID = "AKIA3INCCTU6WQMUX57X" 
+        AWS_SECRET_ACCESS_KEY = "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"
         
         IMAGE_TAG = "jenkins-${BUILD_NUMBER}-${sh(returnStdout: true, script: 'date +%s')}"
         IMAGE_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${params.AWS_REGION}.amazonaws.com/${params.ECR_REPO}:${IMAGE_TAG}"
