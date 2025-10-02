@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'AWS_REGION', defaultValue: 'us-east-2', description: 'Región de AWS donde se despliega.')
+        string(name: 'AWS_REGION', defaultValue: 'sa-east-1', description: 'Región de AWS donde se despliega.')
         string(name: 'ECR_REPO', defaultValue: 'nginx-ecs-demo', description: 'Nombre del repositorio ECR.')
         string(name: 'ECS_CLUSTER', defaultValue: 'ecs-lab-cluster', description: 'Nombre del Cluster ECS.')
         string(name: 'ECS_SERVICE', defaultValue: 'nginx-lab-svc', description: 'Nombre del Servicio ECS a actualizar.')
